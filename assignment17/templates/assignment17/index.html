@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 17: Sum of Range</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .numbers-display { background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 15px; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 17: Sum of Range</h1>
+        
+        <div class="card">
+            <p class="description">Sum numbers in a range with optional filtering.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Use a for loop from start to end using step</li>
+                    <li>Apply filter based on filter_type using if/elif</li>
+                    <li>Filter types: All Numbers, Even Only, Odd Only, Multiples of 3</li>
+                    <li>Append qualifying numbers to included_numbers</li>
+                    <li>Accumulate total and count</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="start" placeholder="Start number" value="{% if start %}{{ start }}{% endif %}">
+                <input type="text" name="end" placeholder="End number" value="{% if end %}{{ end }}{% endif %}">
+                <input type="text" name="step" placeholder="Step (default 1)" value="{% if step %}{{ step }}{% endif %}">
+                <select name="filter_type">
+                    <option value="All Numbers" {% if filter_type == 'All Numbers' %}selected{% endif %}>All Numbers</option>
+                    <option value="Even Only" {% if filter_type == 'Even Only' %}selected{% endif %}>Even Only</option>
+                    <option value="Odd Only" {% if filter_type == 'Odd Only' %}selected{% endif %}>Odd Only</option>
+                    <option value="Multiples of 3" {% if filter_type == 'Multiples of 3' %}selected{% endif %}>Multiples of 3</option>
+                </select>
+                <button type="submit">Calculate Sum</button>
+            </form>
+
+            {% if included_numbers %}
+                <div class="result-box">
+                    <p><strong>Range:</strong> {{ start }} to {{ end }} (step: {{ step }})</p>
+                    <p><strong>Filter:</strong> {{ filter_type }}</p>
+                    <p><strong>Included Numbers:</strong></p>
+                    <div class="numbers-display">{{ included_numbers|join:", " }}</div>
+                    <p><strong>Count:</strong> {{ count }}</p>
+                    <p><strong>Total Sum:</strong> {{ total }}</p>
+                    {% if count > 0 %}
+                        <p><strong>Average:</strong> {% widthratio total count 1 %}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

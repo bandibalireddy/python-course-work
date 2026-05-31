@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 14: Traffic Light Advisor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; }
+        .status-safe { background-color: #d4edda; border-left: 4px solid #28a745; color: #155724; }
+        .status-warning { background-color: #fff3cd; border-left: 4px solid #ffc107; color: #856404; }
+        .status-danger { background-color: #f8d7da; border-left: 4px solid #dc3545; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 14: Traffic Light Advisor</h1>
+        
+        <div class="card">
+            <p class="description">Enter your speed and zone type to get driving advice.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Check speed against zone limits: School Zone (15 mph), Residential (25 mph), City Center (35 mph), Highway (70 mph)</li>
+                    <li>Set status to "Safe" (at or below limit), "Warning" (within 10mph over), or "Danger" (more than 10mph over)</li>
+                    <li>Set advice with a descriptive message based on status and zone</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="speed" placeholder="Enter speed (mph)" value="{% if speed %}{{ speed }}{% endif %}">
+                <select name="zone_type">
+                    <option value="">Select zone type</option>
+                    <option value="School Zone" {% if zone_type == 'School Zone' %}selected{% endif %}>School Zone</option>
+                    <option value="Highway" {% if zone_type == 'Highway' %}selected{% endif %}>Highway</option>
+                    <option value="Residential" {% if zone_type == 'Residential' %}selected{% endif %}>Residential</option>
+                    <option value="City Center" {% if zone_type == 'City Center' %}selected{% endif %}>City Center</option>
+                </select>
+                <button type="submit">Check Speed</button>
+            </form>
+
+            {% if status %}
+                <div class="result-box status-{{ status|lower }}">
+                    <p><strong>Speed:</strong> {{ speed }} mph</p>
+                    <p><strong>Zone:</strong> {{ zone_type }}</p>
+                    <p><strong>Status:</strong> {{ status }}</p>
+                    <p><strong>Advice:</strong> {{ advice }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

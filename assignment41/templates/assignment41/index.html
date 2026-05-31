@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 41: Safe Calculator with Exceptions</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .error-box { background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .error-box p { margin: 8px 0; color: #721c24; }
+        .error-box strong { color: #721c24; }
+        .log-box { background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 15px; max-height: 200px; overflow-y: auto; }
+        .log-box p { margin: 5px 0; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 41: Safe Calculator with Exceptions</h1>
+        
+        <div class="card">
+            <p class="description">Perform calculations with comprehensive exception handling.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>try/except block wrapping ALL calculations</li>
+                    <li>Catch ValueError: if inputs cannot be converted to numbers</li>
+                    <li>Catch ZeroDivisionError: if dividing by zero</li>
+                    <li>Catch TypeError: if operation receives wrong types</li>
+                    <li>Custom check: raise ValueError if Square Root of negative number</li>
+                    <li>Set error_type and error_message for any exception caught</li>
+                    <li>Set was_successful = True only if no exception occurred</li>
+                    <li>Add a finally block that logs the attempt (append to attempt_log)</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="expression" placeholder="Expression (e.g. 10 / 2)" value="{% if expression %}{{ expression }}{% endif %}">
+                <input type="text" name="num1" placeholder="Number 1" value="{% if num1_str %}{{ num1_str }}{% endif %}">
+                <input type="text" name="num2" placeholder="Number 2" value="{% if num2_str %}{{ num2_str }}{% endif %}">
+                <select name="operation">
+                    <option value="">Select operation</option>
+                    <option value="Add" {% if operation == 'Add' %}selected{% endif %}>Add</option>
+                    <option value="Subtract" {% if operation == 'Subtract' %}selected{% endif %}>Subtract</option>
+                    <option value="Multiply" {% if operation == 'Multiply' %}selected{% endif %}>Multiply</option>
+                    <option value="Divide" {% if operation == 'Divide' %}selected{% endif %}>Divide</option>
+                    <option value="Power" {% if operation == 'Power' %}selected{% endif %}>Power</option>
+                    <option value="Square Root" {% if operation == 'Square Root' %}selected{% endif %}>Square Root</option>
+                </select>
+                <button type="submit">Calculate</button>
+            </form>
+
+            {% if result is not None %}
+                <div class="result-box">
+                    <p><strong>Result:</strong> {{ result }}</p>
+                    <p><strong>Success:</strong> Yes</p>
+                </div>
+            {% endif %}
+
+            {% if error_type %}
+                <div class="error-box">
+                    <p><strong>Error Type:</strong> {{ error_type }}</p>
+                    <p><strong>Error Message:</strong> {{ error_message }}</p>
+                    <p><strong>Success:</strong> No</p>
+                </div>
+            {% endif %}
+
+            {% if attempt_log %}
+                <div class="log-box">
+                    <p><strong>Attempt Log:</strong></p>
+                    {% for log in attempt_log %}
+                        <p>{{ log }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

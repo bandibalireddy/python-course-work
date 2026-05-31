@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 32: BMI Calculator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .bmi-display { font-size: 48px; font-weight: bold; text-align: center; margin: 20px 0; }
+        .bmi-scale { display: flex; height: 30px; border-radius: 15px; margin-top: 20px; overflow: hidden; }
+        .scale-underweight { width: 18.5%; background-color: #17a2b8; }
+        .scale-normal { width: 21.5%; background-color: #28a745; }
+        .scale-overweight { width: 25%; background-color: #ffc107; }
+        .scale-obese { width: 35%; background-color: #dc3545; }
+        .bmi-marker { position: relative; height: 40px; margin-top: -35px; }
+        .bmi-marker::after { content: '▼'; position: absolute; font-size: 24px; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 32: BMI Calculator</h1>
+        
+        <div class="card">
+            <p class="description">Calculate BMI with metric or imperial units using custom functions.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>calculate_bmi_metric: returns BMI rounded to 1 decimal</li>
+                    <li>calculate_bmi_imperial: converts to metric first, then calculates</li>
+                    <li>get_bmi_category: returns Underweight/Normal/Overweight/Obese</li>
+                    <li>get_health_advice: returns advice string per category</li>
+                    <li>Call correct function based on unit_system</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="unit_system">
+                    <option value="Metric" {% if unit_system == 'Metric' %}selected{% endif %}>Metric (kg/m)</option>
+                    <option value="Imperial" {% if unit_system == 'Imperial' %}selected{% endif %}>Imperial (lbs/ft+in)</option>
+                </select>
+                <input type="text" name="weight" placeholder="Weight" value="{% if weight %}{{ weight }}{% endif %}">
+                <input type="text" name="height" placeholder="Height (meters or feet)" value="{% if height %}{{ height }}{% endif %}">
+                <input type="text" name="height_inches" placeholder="Height inches (Imperial only)" value="{% if height_inches %}{{ height_inches }}{% endif %}">
+                <button type="submit">Calculate BMI</button>
+            </form>
+
+            {% if bmi %}
+                <div class="result-box">
+                    <div class="bmi-display">{{ bmi }}</div>
+                    <p><strong>Category:</strong> {{ category }}</p>
+                    <p><strong>Health Advice:</strong> {{ health_advice }}</p>
+                    <div class="bmi-scale">
+                        <div class="scale-underweight"></div>
+                        <div class="scale-normal"></div>
+                        <div class="scale-overweight"></div>
+                        <div class="scale-obese"></div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

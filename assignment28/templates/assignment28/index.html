@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 28: HTTP Status Decoder</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box.success { background-color: #d4edda; border-left: 4px solid #28a745; }
+        .result-box.redirect { background-color: #fff3cd; border-left: 4px solid #ffc107; }
+        .result-box.error { background-color: #f8d7da; border-left: 4px solid #dc3545; }
+        .result-box.info { background-color: #d1ecf1; border-left: 4px solid #17a2b8; }
+        .result-box p { margin: 8px 0; }
+        .result-box strong { color: #333; }
+        .code-display { font-size: 48px; font-weight: bold; text-align: center; margin: 20px 0; }
+        .badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin-right: 10px; }
+        .badge-1xx { background-color: #17a2b8; color: white; }
+        .badge-2xx { background-color: #28a745; color: white; }
+        .badge-3xx { background-color: #ffc107; color: #333; }
+        .badge-4xx { background-color: #dc3545; color: white; }
+        .badge-5xx { background-color: #6f42c1; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 28: HTTP Status Decoder</h1>
+        
+        <div class="card">
+            <p class="description">Decode HTTP status codes using match/case statements.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>match/case on code to determine meaning</li>
+                    <li>Determine category based on first digit (1xx, 2xx, 3xx, 4xx, 5xx)</li>
+                    <li>Set is_error = True for 4xx and 5xx codes</li>
+                    <li>Set a helpful description for each code</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="status_code" placeholder="Enter HTTP status code (e.g., 404)" value="{% if code %}{{ code }}{% endif %}">
+                <button type="submit">Decode Status</button>
+            </form>
+
+            {% if category %}
+                <div class="result-box {% if category == '2xx' %}success{% elif category == '3xx' %}redirect{% elif category == '4xx' or category == '5xx' %}error{% else %}info{% endif %}">
+                    <div class="code-display">{{ code }}</div>
+                    <p><strong>Category:</strong> <span class="badge badge-{{ category }}">{{ category }}</span></p>
+                    <p><strong>Meaning:</strong> {{ meaning }}</p>
+                    <p><strong>Description:</strong> {{ description }}</p>
+                    {% if is_error %}
+                        <p><strong>Error:</strong> Yes</p>
+                    {% else %}
+                        <p><strong>Error:</strong> No</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Learning Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        .assignments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .assignment-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .assignment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .assignment-number {
+            background-color: #007bff;
+            color: white;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .assignment-title {
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .assignment-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .week-section {
+            margin-bottom: 50px;
+        }
+        .week-title {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 5px;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .week-topic {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Python Learning Dashboard</h1>
+        <p class="subtitle">Complete 43 assignments to master Python fundamentals</p>
+        
+        {% for week in weeks %}
+            <div class="week-section">
+                <h2 class="week-title">{{ week.name }}</h2>
+                <p class="week-topic">{{ week.topic }}</p>
+                <div class="assignments-grid">
+                    {% for assignment in week.assignments %}
+                        <a href="{{ assignment.url }}" class="assignment-card">
+                            <span class="assignment-number">Assignment {{ assignment.number }}</span>
+                            <h2 class="assignment-title">{{ assignment.title }}</h2>
+                            <p class="assignment-description">{{ assignment.description }}</p>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

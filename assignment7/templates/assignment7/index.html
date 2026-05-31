@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 7: Grade Classifier</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box h2 { color: #155724; margin-bottom: 10px; font-size: 24px; }
+        .result-box p { margin: 8px 0; color: #155724; font-size: 18px; }
+        .error-box { background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; border-radius: 4px; margin-top: 20px; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 7: Grade Classifier</h1>
+        
+        <div class="card">
+            <p class="description">Enter a score (0-100) to get a letter grade and feedback.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>90–100 → A, 80–89 → B, 70–79 → C, 60–69 → D, below 60 → F</li>
+                    <li>Assign an encouraging message per grade</li>
+                    <li>Handle out-of-range scores (below 0 or above 100) with an error message</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="score" placeholder="Enter score (0-100)" value="{% if score %}{{ score }}{% endif %}">
+                <button type="submit">Classify Grade</button>
+            </form>
+
+            {% if error %}
+                <div class="error-box">
+                    <strong>{{ error }}</strong>
+                </div>
+            {% endif %}
+
+            {% if grade %}
+                <div class="result-box">
+                    <h2>Grade: {{ grade }}</h2>
+                    <p>{{ message }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

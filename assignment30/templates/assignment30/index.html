@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 30: Password Strength Checker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box.weak { background-color: #f8d7da; border-left: 4px solid #dc3545; }
+        .result-box.medium { background-color: #fff3cd; border-left: 4px solid #ffc107; }
+        .result-box.strong { background-color: #d4edda; border-left: 4px solid #28a745; }
+        .result-box.very-strong { background-color: #d1ecf1; border-left: 4px solid #17a2b8; }
+        .check-item { display: flex; align-items: center; margin: 8px 0; }
+        .check-icon { font-size: 20px; margin-right: 10px; }
+        .check-pass { color: #28a745; }
+        .check-fail { color: #dc3545; }
+        .strength-bar { height: 20px; border-radius: 10px; margin-top: 15px; }
+        .strength-weak { width: 20%; background-color: #dc3545; }
+        .strength-medium { width: 50%; background-color: #ffc107; }
+        .strength-strong { width: 75%; background-color: #28a745; }
+        .strength-very-strong { width: 100%; background-color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 30: Password Strength Checker</h1>
+        
+        <div class="card">
+            <p class="description">Check password strength using custom functions.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Define 6 functions above the view</li>
+                    <li>Each check function returns True or False</li>
+                    <li>calculate_strength(score) returns "Weak"(0-2), "Medium"(3), "Strong"(4), "Very Strong"(5)</li>
+                    <li>Inside view: call each function, build checks dict, total score, determine strength</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="password" name="password" placeholder="Enter password" value="">
+                <button type="submit">Check Strength</button>
+            </form>
+
+            {% if checks %}
+                <div class="result-box {{ strength_class }}">
+                    <p><strong>Password:</strong> {{ masked_password }}</p>
+                    <p><strong>Score:</strong> {{ score }} / 5</p>
+                    <p><strong>Strength:</strong> {{ strength }}</p>
+                    <div class="strength-bar strength-{{ strength_class }}"></div>
+                    <div style="margin-top: 15px;">
+                        <div class="check-item">
+                            <span class="check-icon {% if checks.min_length %}check-pass{% else %}check-fail{% endif %}">
+                                {% if checks.min_length %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span>Minimum 8 characters</span>
+                        </div>
+                        <div class="check-item">
+                            <span class="check-icon {% if checks.uppercase %}check-pass{% else %}check-fail{% endif %}">
+                                {% if checks.uppercase %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span>Contains uppercase letter</span>
+                        </div>
+                        <div class="check-item">
+                            <span class="check-icon {% if checks.lowercase %}check-pass{% else %}check-fail{% endif %}">
+                                {% if checks.lowercase %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span>Contains lowercase letter</span>
+                        </div>
+                        <div class="check-item">
+                            <span class="check-icon {% if checks.digit %}check-pass{% else %}check-fail{% endif %}">
+                                {% if checks.digit %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span>Contains digit</span>
+                        </div>
+                        <div class="check-item">
+                            <span class="check-icon {% if checks.special_char %}check-pass{% else %}check-fail{% endif %}">
+                                {% if checks.special_char %}✓{% else %}✗{% endif %}
+                            </span>
+                            <span>Contains special character</span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

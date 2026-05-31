@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 24: Countdown Timer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .countdown-display { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .step-badge { background-color: #007bff; color: white; padding: 15px 20px; border-radius: 50%; font-size: 24px; font-weight: bold; min-width: 60px; text-align: center; }
+        .final-badge { background-color: #28a745; color: white; padding: 15px 20px; border-radius: 8px; font-size: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 24: Countdown Timer</h1>
+        
+        <div class="card">
+            <p class="description">Create a countdown timer using a while loop.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>While loop starting from start, decrementing by step, stopping at stop_at</li>
+                    <li>Append each value to countdown_steps</li>
+                    <li>Count total_steps taken</li>
+                    <li>Add "Blast Off!" or "Done!" as final element</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="start_number" placeholder="Start number (max 100)" value="{% if start %}{{ start }}{% endif %}">
+                <input type="text" name="step" placeholder="Step (default 1)" value="{% if step %}{{ step }}{% endif %}">
+                <input type="text" name="stop_at" placeholder="Stop at (default 0)" value="{% if stop_at %}{{ stop_at }}{% endif %}">
+                <button type="submit">Start Countdown</button>
+            </form>
+
+            {% if countdown_steps %}
+                <div class="result-box">
+                    <p><strong>Total Steps:</strong> {{ total_steps }}</p>
+                    <div class="countdown-display">
+                        {% for step in countdown_steps %}
+                            {% if step == "Blast Off!" or step == "Done!" %}
+                                <span class="final-badge">{{ step }}</span>
+                            {% else %}
+                                <span class="step-badge">{{ step }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

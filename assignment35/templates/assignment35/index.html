@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 35: Library Book Tracker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        .available { color: #28a745; font-weight: bold; }
+        .checked-out { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 35: Library Book Tracker</h1>
+        
+        <div class="card">
+            <p class="description">Track library books using Book and Library classes.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Book.__init__: set title, author, isbn, is_available=True</li>
+                    <li>Book.check_out: set is_available=False if available, else raise error message</li>
+                    <li>Book.return_book: set is_available=True</li>
+                    <li>Book.get_info: return dict of book details</li>
+                    <li>Library.__init__: set self.books = []</li>
+                    <li>Library.add_book: append Book to self.books</li>
+                    <li>Library.find_book: search by title, return Book or None</li>
+                    <li>Library.get_available_books: return list of available books</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Add Book" {% if action == 'Add Book' %}selected{% endif %}>Add Book</option>
+                    <option value="Check Out" {% if action == 'Check Out' %}selected{% endif %}>Check Out</option>
+                    <option value="Return Book" {% if action == 'Return Book' %}selected{% endif %}>Return Book</option>
+                    <option value="View All" {% if action == 'View All' %}selected{% endif %}>View All</option>
+                </select>
+                <input type="text" name="title" placeholder="Book title" value="{% if title %}{{ title }}{% endif %}">
+                <input type="text" name="author" placeholder="Author" value="{% if author %}{{ author }}{% endif %}">
+                <input type="text" name="isbn" placeholder="ISBN" value="{% if isbn %}{{ isbn }}{% endif %}">
+                <input type="hidden" name="books_data" value="{% if books_data_output %}{{ books_data_output }}{% endif %}">
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if message %}
+                <div class="result-box">
+                    <p><strong>Message:</strong> {{ message }}</p>
+                </div>
+            {% endif %}
+
+            {% if library %}
+                <div class="result-box">
+                    <p><strong>Book Catalog:</strong></p>
+                    <table>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Status</th>
+                        </tr>
+                        {% for book in library.books %}
+                            <tr>
+                                <td>{{ book.title }}</td>
+                                <td>{{ book.author }}</td>
+                                <td>{{ book.isbn }}</td>
+                                <td class="{% if book.is_available %}available{% else %}checked-out{% endif %}">
+                                    {% if book.is_available %}Available{% else %}Checked Out{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

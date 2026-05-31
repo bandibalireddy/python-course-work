@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 38: Student Gradebook OOP</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        .grade-a { color: #28a745; font-weight: bold; }
+        .grade-b { color: #007bff; font-weight: bold; }
+        .grade-c { color: #ffc107; font-weight: bold; }
+        .grade-d { color: #fd7e14; font-weight: bold; }
+        .grade-f { color: #dc3545; font-weight: bold; }
+        .stats-panel { background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 38: Student Gradebook OOP</h1>
+        
+        <div class="card">
+            <p class="description">Manage student grades using Student and Gradebook classes.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Student.__init__: name, student_id, grades = {}</li>
+                    <li>Student.add_grade: grades[subject] = score</li>
+                    <li>Student.get_average: mean of grades.values()</li>
+                    <li>Student.get_letter_grade: based on average</li>
+                    <li>Gradebook.__init__: self.students = []</li>
+                    <li>Gradebook.add_student: append to list</li>
+                    <li>Gradebook.get_class_average: average of all student averages</li>
+                    <li>Gradebook.get_top_student: student with highest average</li>
+                    <li>Gradebook.get_ranked_students: sorted list by average descending</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Add Student" {% if action == 'Add Student' %}selected{% endif %}>Add Student</option>
+                    <option value="Add Grade" {% if action == 'Add Grade' %}selected{% endif %}>Add Grade</option>
+                    <option value="View Rankings" {% if action == 'View Rankings' %}selected{% endif %}>View Rankings</option>
+                    <option value="Class Stats" {% if action == 'Class Stats' %}selected{% endif %}>Class Stats</option>
+                </select>
+                <input type="text" name="student_name" placeholder="Student name" value="{% if student_name %}{{ student_name }}{% endif %}">
+                <input type="text" name="student_id" placeholder="Student ID" value="{% if student_id %}{{ student_id }}{% endif %}">
+                <input type="text" name="subject" placeholder="Subject" value="{% if subject %}{{ subject }}{% endif %}">
+                <input type="text" name="score" placeholder="Score" value="{% if score %}{{ score }}{% endif %}">
+                <input type="hidden" name="gradebook_data" value="{% if gradebook_data_output %}{{ gradebook_data_output }}{% endif %}">
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if message %}
+                <div class="result-box">
+                    <p><strong>Message:</strong> {{ message }}</p>
+                </div>
+            {% endif %}
+
+            {% if gradebook.students %}
+                <div class="result-box">
+                    <p><strong>Ranked Students:</strong></p>
+                    <table>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>ID</th>
+                            <th>Average</th>
+                            <th>Letter Grade</th>
+                            <th>Grades</th>
+                        </tr>
+                        {% for student in gradebook.get_ranked_students %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ student.name }}</td>
+                                <td>{{ student.student_id }}</td>
+                                <td>{{ student.get_average }}</td>
+                                <td class="grade-{{ student.get_letter_grade|lower }}">{{ student.get_letter_grade }}</td>
+                                <td>{{ student.grades }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <div class="stats-panel">
+                        <p><strong>Class Average:</strong> {{ gradebook.get_class_average }}</p>
+                        {% if gradebook.get_top_student %}
+                            <p><strong>Top Student:</strong> {{ gradebook.get_top_student.name }} ({{ gradebook.get_top_student.get_average }})</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

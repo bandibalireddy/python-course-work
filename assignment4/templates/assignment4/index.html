@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 4: Grocery List Manager</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box ul { margin-left: 20px; }
+        .result-box li { margin: 5px 0; color: #155724; }
+        .message-box { background-color: #cce5ff; border-left: 4px solid #007bff; padding: 15px; border-radius: 4px; margin-top: 20px; color: #004085; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 4: Grocery List Manager</h1>
+        
+        <div class="card">
+            <p class="description">Add, remove, view, and clear items from your grocery list.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Add Item: Add an item to the list (avoid duplicates)</li>
+                    <li>Remove Item: Remove an item if it exists</li>
+                    <li>View List: Display the current list</li>
+                    <li>Clear List: Empty the entire list</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="current_list" value="{{ current_list_str }}">
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Add Item" {% if action == 'Add Item' %}selected{% endif %}>Add Item</option>
+                    <option value="Remove Item" {% if action == 'Remove Item' %}selected{% endif %}>Remove Item</option>
+                    <option value="View List" {% if action == 'View List' %}selected{% endif %}>View List</option>
+                    <option value="Clear List" {% if action == 'Clear List' %}selected{% endif %}>Clear List</option>
+                </select>
+                <input type="text" name="item_name" placeholder="Item name (for Add/Remove)" value="{{ item_name }}">
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if grocery_list %}
+                <div class="result-box">
+                    <h3>Current Grocery List:</h3>
+                    <ul>
+                        {% for item in grocery_list %}
+                            <li>{{ item }}</li>
+                        {% empty %}
+                            <li>Your list is empty</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if message %}
+                <div class="message-box">
+                    <strong>{{ message }}</strong>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

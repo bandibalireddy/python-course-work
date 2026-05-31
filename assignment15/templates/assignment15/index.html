@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 15: Season Finder</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .months-list { margin-left: 20px; color: #155724; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 15: Season Finder</h1>
+        
+        <div class="card">
+            <p class="description">Find the season based on month and hemisphere.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Use nested if/else: first check hemisphere, then check month</li>
+                    <li>Northern hemisphere: Winter (Dec, Jan, Feb), Spring (Mar, Apr, May), Summer (Jun, Jul, Aug), Autumn (Sep, Oct, Nov)</li>
+                    <li>Southern hemisphere: opposite seasons</li>
+                    <li>Set weather_tip based on season</li>
+                    <li>Set months_in_season as a list of the 3 months in that season</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="month">
+                    <option value="">Select month</option>
+                    <option value="January" {% if month == 'January' %}selected{% endif %}>January</option>
+                    <option value="February" {% if month == 'February' %}selected{% endif %}>February</option>
+                    <option value="March" {% if month == 'March' %}selected{% endif %}>March</option>
+                    <option value="April" {% if month == 'April' %}selected{% endif %}>April</option>
+                    <option value="May" {% if month == 'May' %}selected{% endif %}>May</option>
+                    <option value="June" {% if month == 'June' %}selected{% endif %}>June</option>
+                    <option value="July" {% if month == 'July' %}selected{% endif %}>July</option>
+                    <option value="August" {% if month == 'August' %}selected{% endif %}>August</option>
+                    <option value="September" {% if month == 'September' %}selected{% endif %}>September</option>
+                    <option value="October" {% if month == 'October' %}selected{% endif %}>October</option>
+                    <option value="November" {% if month == 'November' %}selected{% endif %}>November</option>
+                    <option value="December" {% if month == 'December' %}selected{% endif %}>December</option>
+                </select>
+                <select name="hemisphere">
+                    <option value="">Select hemisphere</option>
+                    <option value="Northern" {% if hemisphere == 'Northern' %}selected{% endif %}>Northern</option>
+                    <option value="Southern" {% if hemisphere == 'Southern' %}selected{% endif %}>Southern</option>
+                </select>
+                <button type="submit">Find Season</button>
+            </form>
+
+            {% if season %}
+                <div class="result-box">
+                    <p><strong>Month:</strong> {{ month }}</p>
+                    <p><strong>Hemisphere:</strong> {{ hemisphere }}</p>
+                    <p><strong>Season:</strong> {{ season }}</p>
+                    <p><strong>Weather Tip:</strong> {{ weather_tip }}</p>
+                    <p><strong>Months in this season:</strong></p>
+                    <ul class="months-list">
+                        {% for m in months_in_season %}
+                            <li>{{ m }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

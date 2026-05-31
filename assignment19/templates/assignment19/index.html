@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 19: Contact Book</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 19: Contact Book</h1>
+        
+        <div class="card">
+            <p class="description">Manage contacts with add, search, delete, and view all operations.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Parse contacts_data_str into contacts dict: {name: {'phone': ..., 'email': ...}}</li>
+                    <li>If Add: add new contact to dict</li>
+                    <li>If Search: look up by name, set result to contact dict or "Not Found"</li>
+                    <li>If Delete: remove from dict if exists</li>
+                    <li>If View All: result = entire contacts dict</li>
+                    <li>Serialize contacts dict back to string for hidden field</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Add Contact" {% if action == 'Add Contact' %}selected{% endif %}>Add Contact</option>
+                    <option value="Search Contact" {% if action == 'Search Contact' %}selected{% endif %}>Search Contact</option>
+                    <option value="Delete Contact" {% if action == 'Delete Contact' %}selected{% endif %}>Delete Contact</option>
+                    <option value="View All" {% if action == 'View All' %}selected{% endif %}>View All</option>
+                </select>
+                <input type="text" name="contact_name" placeholder="Contact name" value="{% if contact_name %}{{ contact_name }}{% endif %}">
+                <input type="text" name="contact_phone" placeholder="Phone number" value="{% if contact_phone %}{{ contact_phone }}{% endif %}">
+                <input type="text" name="contact_email" placeholder="Email address" value="{% if contact_email %}{{ contact_email }}{% endif %}">
+                <input type="hidden" name="contacts_data" value="{% if contacts_data_output %}{{ contacts_data_output }}{% endif %}">
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if message %}
+                <div class="result-box">
+                    <p><strong>Message:</strong> {{ message }}</p>
+                </div>
+            {% endif %}
+
+            {% if result %}
+                <div class="result-box">
+                    <p><strong>Result:</strong></p>
+                    {% if result == "Not Found" %}
+                        <p>{{ result }}</p>
+                    {% elif result is dict %}
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                            </tr>
+                            {% for name, info in result.items %}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>{{ info.phone }}</td>
+                                    <td>{{ info.email }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 21: Country Capital Quiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box.pass { background-color: #d4edda; border-left: 4px solid #28a745; }
+        .result-box.fail { background-color: #f8d7da; border-left: 4px solid #dc3545; }
+        .result-box p { margin: 8px 0; }
+        .result-box strong { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        .correct { color: #28a745; font-weight: bold; }
+        .incorrect { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 21: Country Capital Quiz</h1>
+        
+        <div class="card">
+            <p class="description">Test your knowledge of world capitals!</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Loop through COUNTRIES dict</li>
+                    <li>Get student answer from POST for each country</li>
+                    <li>Compare answer (case insensitive) to correct capital</li>
+                    <li>Append to results: {'country': ..., 'correct': ..., 'given': ..., 'is_correct': ...}</li>
+                    <li>Calculate score and percentage</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                {% for country, capital in countries.items %}
+                    <label>{{ country }}:</label>
+                    <input type="text" name="{{ country }}" placeholder="Enter capital" value="">
+                {% endfor %}
+                <button type="submit">Submit Quiz</button>
+            </form>
+
+            {% if results %}
+                <div class="result-box {% if percentage >= 70 %}pass{% else %}fail{% endif %}">
+                    <p><strong>Score:</strong> {{ score }} / {{ total }}</p>
+                    <p><strong>Percentage:</strong> {{ percentage }}%</p>
+                    {% if percentage >= 70 %}
+                        <p><strong>Great job! You passed!</strong></p>
+                    {% else %}
+                        <p><strong>Keep practicing! You need 70% to pass.</strong></p>
+                    {% endif %}
+                    <table>
+                        <tr>
+                            <th>Country</th>
+                            <th>Your Answer</th>
+                            <th>Correct Answer</th>
+                            <th>Result</th>
+                        </tr>
+                        {% for r in results %}
+                            <tr>
+                                <td>{{ r.country }}</td>
+                                <td>{{ r.given }}</td>
+                                <td>{{ r.correct }}</td>
+                                <td class="{% if r.is_correct %}correct{% else %}incorrect{% endif %}">
+                                    {% if r.is_correct %}✓ Correct{% else %}✗ Incorrect{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

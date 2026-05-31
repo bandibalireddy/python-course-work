@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 33: Text Formatter Library</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        textarea, input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        textarea:focus, input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; vertical-align: top; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        .original-text { background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .transformed-text { background-color: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 33: Text Formatter Library</h1>
+        
+        <div class="card">
+            <p class="description">Transform text using various formatting functions.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>slugify: lowercase, replace spaces with hyphens, remove special chars</li>
+                    <li>titlecase: capitalize first letter of each word</li>
+                    <li>truncate: cut at max_len and add "..." if longer</li>
+                    <li>word_wrap: insert newline every `width` characters at word boundaries</li>
+                    <li>remove_extra_spaces: collapse multiple spaces into one</li>
+                    <li>count_sentences: count sentences by counting . ! ?</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <textarea name="text" rows="5" placeholder="Enter text to format">{% if text %}{{ text }}{% endif %}</textarea>
+                <input type="text" name="max_length" placeholder="Max length for truncate (default 50)" value="{% if max_length %}{{ max_length }}{% endif %}">
+                <input type="text" name="line_width" placeholder="Line width for wrap (default 30)" value="{% if line_width %}{{ line_width }}{% endif %}">
+                <button type="submit">Format Text</button>
+            </form>
+
+            {% if text %}
+                <div class="original-text">
+                    <p><strong>Original Text:</strong></p>
+                    <p>{{ text }}</p>
+                </div>
+            {% endif %}
+
+            {% if results %}
+                <div class="result-box">
+                    <table>
+                        <tr>
+                            <th>Function</th>
+                            <th>Result</th>
+                        </tr>
+                        <tr>
+                            <td>slugify</td>
+                            <td><div class="transformed-text">{{ results.slugify }}</div></td>
+                        </tr>
+                        <tr>
+                            <td>titlecase</td>
+                            <td><div class="transformed-text">{{ results.titlecase }}</div></td>
+                        </tr>
+                        <tr>
+                            <td>truncate</td>
+                            <td><div class="transformed-text">{{ results.truncate }}</div></td>
+                        </tr>
+                        <tr>
+                            <td>word_wrap</td>
+                            <td><div class="transformed-text">{{ results.word_wrap|linebreaks }}</div></td>
+                        </tr>
+                        <tr>
+                            <td>remove_extra_spaces</td>
+                            <td><div class="transformed-text">{{ results.remove_extra_spaces }}</div></td>
+                        </tr>
+                        <tr>
+                            <td>count_sentences</td>
+                            <td><div class="transformed-text">{{ results.count_sentences }}</div></td>
+                        </tr>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

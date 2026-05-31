@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 25: Collatz Conjecture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .sequence-trail { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+        .sequence-number { background-color: #007bff; color: white; padding: 10px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; }
+        .sequence-final { background-color: #28a745; color: white; padding: 10px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 25: Collatz Conjecture</h1>
+        
+        <div class="card">
+            <p class="description">Explore the famous Collatz Conjecture with while loops and conditionals.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>While loop: continue until number reaches 1</li>
+                    <li>If number is even: divide by 2</li>
+                    <li>If number is odd: multiply by 3 and add 1</li>
+                    <li>Append each new value to sequence</li>
+                    <li>Track total steps, even steps, and odd steps</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="number" placeholder="Enter a positive integer" value="{% if number %}{{ number }}{% endif %}">
+                <button type="submit">Generate Sequence</button>
+            </form>
+
+            {% if sequence %}
+                <div class="result-box">
+                    <p><strong>Total Steps:</strong> {{ steps }}</p>
+                    <p><strong>Even Operations:</strong> {{ is_even_steps }}</p>
+                    <p><strong>Odd Operations:</strong> {{ is_odd_steps }}</p>
+                    <p><strong>Sequence:</strong></p>
+                    <div class="sequence-trail">
+                        {% for num in sequence %}
+                            {% if num == 1 %}
+                                <span class="sequence-final">{{ num }}</span>
+                            {% else %}
+                                <span class="sequence-number">{{ num }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

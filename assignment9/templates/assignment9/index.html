@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 9: Word Counter & Analyzer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        textarea { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; min-height: 150px; resize: vertical; }
+        textarea:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box table { width: 100%; border-collapse: collapse; }
+        .result-box td { padding: 8px; border-bottom: 1px solid #c3e6cb; }
+        .result-box td:first-child { font-weight: bold; color: #155724; }
+        .unique-words { margin-top: 15px; }
+        .unique-words span { display: inline-block; background: rgba(40, 167, 69, 0.1); padding: 4px 10px; border-radius: 15px; margin: 3px; font-size: 14px; color: #155724; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 9: Word Counter & Analyzer</h1>
+        
+        <div class="card">
+            <p class="description">Enter a paragraph to analyze word count and other statistics.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Split text into words</li>
+                    <li>Count total words</li>
+                    <li>Find the longest word</li>
+                    <li>Find unique words (no duplicates), return as a sorted list</li>
+                    <li>Count total characters (excluding spaces)</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <textarea name="paragraph" placeholder="Enter your paragraph here...">{% if text %}{{ text }}{% endif %}</textarea>
+                <button type="submit">Analyze</button>
+            </form>
+
+            {% if word_count is not None %}
+                <div class="result-box">
+                    <table>
+                        <tr><td>Word Count:</td><td>{{ word_count }}</td></tr>
+                        <tr><td>Longest Word:</td><td>{{ longest_word }}</td></tr>
+                        <tr><td>Character Count (excluding spaces):</td><td>{{ char_count }}</td></tr>
+                    </table>
+                    <div class="unique-words">
+                        <strong>Unique Words ({{ unique_words|length }}):</strong>
+                        {% for word in unique_words %}
+                            <span>{{ word }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

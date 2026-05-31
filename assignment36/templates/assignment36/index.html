@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 36: Simple RPG Character</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .characters-container { display: flex; gap: 20px; margin-top: 20px; }
+        .character-card { flex: 1; background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .character-card.hero { border-top: 4px solid #007bff; }
+        .character-card.villain { border-top: 4px solid #dc3545; }
+        .character-name { font-size: 24px; font-weight: bold; margin-bottom: 15px; }
+        .health-bar { height: 20px; background-color: #e9ecef; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+        .health-fill { height: 100%; transition: width 0.3s; }
+        .health-fill.hero { background-color: #28a745; }
+        .health-fill.villain { background-color: #dc3545; }
+        .stats { margin-top: 15px; }
+        .stats p { margin: 5px 0; }
+        .battle-log { background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 20px; max-height: 200px; overflow-y: auto; }
+        .battle-log p { margin: 5px 0; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 36: Simple RPG Character</h1>
+        
+        <div class="card">
+            <p class="description">Create an RPG battle system using Character classes.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>__init__: set all attributes, max_health = health</li>
+                    <li>attack(other): calculate damage = max(0, self.attack_power - other.defense + random(-2,2))</li>
+                    <li>is_alive: return True if health > 0</li>
+                    <li>heal: restore min(amount, max_health - health), return amount healed</li>
+                    <li>get_status: return dict of all stats</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Start Battle" {% if action == 'Start Battle' %}selected{% endif %}>Start Battle</option>
+                    <option value="Hero Attacks" {% if action == 'Hero Attacks' %}selected{% endif %}>Hero Attacks</option>
+                    <option value="Hero Heals" {% if action == 'Hero Heals' %}selected{% endif %}>Hero Heals</option>
+                    <option value="Villain Attacks" {% if action == 'Villain Attacks' %}selected{% endif %}>Villain Attacks</option>
+                </select>
+                <input type="text" name="hero_name" placeholder="Hero name" value="{% if hero_name %}{{ hero_name }}{% endif %}">
+                <input type="text" name="hero_health" placeholder="Hero health" value="{% if hero_health %}{{ hero_health }}{% endif %}">
+                <input type="text" name="hero_attack" placeholder="Hero attack" value="{% if hero_attack %}{{ hero_attack }}{% endif %}">
+                <input type="text" name="hero_defense" placeholder="Hero defense" value="{% if hero_defense %}{{ hero_defense }}{% endif %}">
+                <input type="text" name="villain_name" placeholder="Villain name" value="{% if villain_name %}{{ villain_name }}{% endif %}">
+                <input type="text" name="villain_health" placeholder="Villain health" value="{% if villain_health %}{{ villain_health }}{% endif %}">
+                <input type="text" name="villain_attack" placeholder="Villain attack" value="{% if villain_attack %}{{ villain_attack }}{% endif %}">
+                <input type="text" name="villain_defense" placeholder="Villain defense" value="{% if villain_defense %}{{ villain_defense }}{% endif %}">
+                <input type="hidden" name="battle_state" value="{% if battle_state_output %}{{ battle_state_output }}{% endif %}">
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if hero and villain %}
+                <div class="characters-container">
+                    <div class="character-card hero">
+                        <div class="character-name">{{ hero.name }}</div>
+                        <div class="health-bar">
+                            <div class="health-fill hero" style="width: {% widthratio hero.health hero.max_health 100 %}%"></div>
+                        </div>
+                        <div class="stats">
+                            <p>Health: {{ hero.health }} / {{ hero.max_health }}</p>
+                            <p>Attack: {{ hero.attack_power }}</p>
+                            <p>Defense: {{ hero.defense }}</p>
+                            <p>Alive: {% if hero.is_alive %}Yes{% else %}No{% endif %}</p>
+                        </div>
+                    </div>
+                    <div class="character-card villain">
+                        <div class="character-name">{{ villain.name }}</div>
+                        <div class="health-bar">
+                            <div class="health-fill villain" style="width: {% widthratio villain.health villain.max_health 100 %}%"></div>
+                        </div>
+                        <div class="stats">
+                            <p>Health: {{ villain.health }} / {{ villain.max_health }}</p>
+                            <p>Attack: {{ villain.attack_power }}</p>
+                            <p>Defense: {{ villain.defense }}</p>
+                            <p>Alive: {% if villain.is_alive %}Yes{% else %}No{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="battle-log">
+                    <p><strong>Battle Log:</strong></p>
+                    {% for log in battle_log %}
+                        <p>{{ log }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

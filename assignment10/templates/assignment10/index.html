@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 10: FizzBuzz with Custom Rules</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .results-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .result-badge { padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: bold; }
+        .result-number { background-color: #e2e3e5; color: #383d41; }
+        .result-fizz { background-color: #007bff; color: white; }
+        .result-buzz { background-color: #28a745; color: white; }
+        .result-fizzbuzz { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 10: FizzBuzz with Custom Rules</h1>
+        
+        <div class="card">
+            <p class="description">Generate a FizzBuzz sequence with custom words.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Loop from 1 to limit (inclusive)</li>
+                    <li>If divisible by 3 and 5 → append fizz_word + buzz_word</li>
+                    <li>If divisible by 3 only → append fizz_word</li>
+                    <li>If divisible by 5 only → append buzz_word</li>
+                    <li>Otherwise → append the number</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="limit" placeholder="Limit (e.g., 20)" value="{% if limit %}{{ limit }}{% endif %}">
+                <input type="text" name="fizz_word" placeholder="Fizz word (default: Fizz)" value="{% if fizz_word %}{{ fizz_word }}{% endif %}">
+                <input type="text" name="buzz_word" placeholder="Buzz word (default: Buzz)" value="{% if buzz_word %}{{ buzz_word }}{% endif %}">
+                <button type="submit">Generate</button>
+            </form>
+
+            {% if results %}
+                <div class="result-box">
+                    <h3>Results:</h3>
+                    <div class="results-grid">
+                        {% for item in results %}
+                            {% with combined=fizz_word|add:buzz_word %}
+                                {% if item == combined %}
+                                    <span class="result-badge result-fizzbuzz">{{ item }}</span>
+                                {% elif item == fizz_word %}
+                                    <span class="result-badge result-fizz">{{ item }}</span>
+                                {% elif item == buzz_word %}
+                                    <span class="result-badge result-buzz">{{ item }}</span>
+                                {% else %}
+                                    <span class="result-badge result-number">{{ item }}</span>
+                                {% endif %}
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

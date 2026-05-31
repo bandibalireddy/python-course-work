@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 27: Day Type Classifier</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin-right: 10px; }
+        .badge-weekday { background-color: #007bff; color: white; }
+        .badge-weekend { background-color: #28a745; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 27: Day Type Classifier</h1>
+        
+        <div class="card">
+            <p class="description">Classify days using match/case statements.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>match/case on day to determine day_type</li>
+                    <li>Weekday: set typical work_hours (9am-5pm)</li>
+                    <li>Weekend: set work_hours to "Day Off"</li>
+                    <li>Use nested match/case or if/else for country-specific notes</li>
+                    <li>Set fun_suggestion based on day type</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="day">
+                    <option value="">Select day</option>
+                    <option value="Monday" {% if day == 'Monday' %}selected{% endif %}>Monday</option>
+                    <option value="Tuesday" {% if day == 'Tuesday' %}selected{% endif %}>Tuesday</option>
+                    <option value="Wednesday" {% if day == 'Wednesday' %}selected{% endif %}>Wednesday</option>
+                    <option value="Thursday" {% if day == 'Thursday' %}selected{% endif %}>Thursday</option>
+                    <option value="Friday" {% if day == 'Friday' %}selected{% endif %}>Friday</option>
+                    <option value="Saturday" {% if day == 'Saturday' %}selected{% endif %}>Saturday</option>
+                    <option value="Sunday" {% if day == 'Sunday' %}selected{% endif %}>Sunday</option>
+                </select>
+                <select name="country">
+                    <option value="">Select country</option>
+                    <option value="USA" {% if country == 'USA' %}selected{% endif %}>USA</option>
+                    <option value="UK" {% if country == 'UK' %}selected{% endif %}>UK</option>
+                    <option value="India" {% if country == 'India' %}selected{% endif %}>India</option>
+                    <option value="Australia" {% if country == 'Australia' %}selected{% endif %}>Australia</option>
+                </select>
+                <button type="submit">Classify Day</button>
+            </form>
+
+            {% if day_type %}
+                <div class="result-box">
+                    <p><strong>Day:</strong> {{ day }}</p>
+                    <p><strong>Country:</strong> {{ country }}</p>
+                    <p><strong>Type:</strong> <span class="badge badge-{{ day_type|lower }}">{{ day_type }}</span></p>
+                    <p><strong>Work Hours:</strong> {{ work_hours }}</p>
+                    <p><strong>Suggestion:</strong> {{ fun_suggestion }}</p>
+                    {% if public_holiday_note %}
+                        <p><strong>Note:</strong> {{ public_holiday_note }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

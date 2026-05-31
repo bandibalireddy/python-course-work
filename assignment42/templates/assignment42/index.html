@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 42: Personal Diary</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        textarea, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        textarea:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .entry-card { background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #007bff; }
+        .entry-date { font-weight: bold; color: #333; margin-bottom: 5px; }
+        .entry-mood { font-size: 24px; margin-bottom: 10px; }
+        .entry-text { color: #666; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 42: Personal Diary</h1>
+        
+        <div class="card">
+            <p class="description">Write and read diary entries with date handling and file operations.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>If Write Entry: open diary file in 'a' (append) mode, write formatted entry</li>
+                    <li>If Read Today: open file in 'r' mode, parse entries, filter to today's date</li>
+                    <li>If Read All: open file, parse ALL entries into entries list</li>
+                    <li>If Delete All: open file in 'w' mode, write empty string</li>
+                    <li>Wrap in try/except: FileNotFoundError → create file first</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Write Entry" {% if action == 'Write Entry' %}selected{% endif %}>Write Entry</option>
+                    <option value="Read Today" {% if action == 'Read Today' %}selected{% endif %}>Read Today</option>
+                    <option value="Read All" {% if action == 'Read All' %}selected{% endif %}>Read All</option>
+                    <option value="Delete All" {% if action == 'Delete All' %}selected{% endif %}>Delete All</option>
+                </select>
+                <textarea name="entry_text" rows="5" placeholder="Write your diary entry here...">{% if entry_text %}{{ entry_text }}{% endif %}</textarea>
+                <select name="mood">
+                    <option value="">Select mood</option>
+                    <option value="Happy" {% if mood == 'Happy' %}selected{% endif %}>Happy 😊</option>
+                    <option value="Sad" {% if mood == 'Sad' %}selected{% endif %}>Sad 😢</option>
+                    <option value="Excited" {% if mood == 'Excited' %}selected{% endif %}>Excited 🎉</option>
+                    <option value="Calm" {% if mood == 'Calm' %}selected{% endif %}>Calm 😌</option>
+                    <option value="Anxious" {% if mood == 'Anxious' %}selected{% endif %}>Anxious 😰</option>
+                    <option value="Grateful" {% if mood == 'Grateful' %}selected{% endif %}>Grateful 🙏</option>
+                </select>
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if message %}
+                <div class="result-box">
+                    <p><strong>Message:</strong> {{ message }}</p>
+                </div>
+            {% endif %}
+
+            {% if entries %}
+                <div class="result-box">
+                    <p><strong>Diary Entries:</strong></p>
+                    {% for entry in entries %}
+                        <div class="entry-card">
+                            <div class="entry-date">{{ entry.date }}</div>
+                            <div class="entry-mood">{{ entry.mood_emoji }}</div>
+                            <div class="entry-text">{{ entry.text }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

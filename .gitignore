@@ -1,0 +1,4 @@
+student_files/
+*.pyc
+__pycache__/
+*.log

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 2: String Inspector</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        textarea { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; min-height: 100px; resize: vertical; }
+        textarea:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box table { width: 100%; border-collapse: collapse; }
+        .result-box td { padding: 8px; border-bottom: 1px solid #c3e6cb; }
+        .result-box td:first-child { font-weight: bold; color: #155724; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 2: String Inspector</h1>
+        
+        <div class="card">
+            <p class="description">Enter any text to analyze its properties.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Calculate the length of the string</li>
+                    <li>Convert to uppercase and lowercase</li>
+                    <li>Reverse the string</li>
+                    <li>Count vowels (a, e, i, o, u — case insensitive)</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <textarea name="user_text" placeholder="Enter your text here...">{% if user_text %}{{ user_text }}{% endif %}</textarea>
+                <button type="submit">Analyze</button>
+            </form>
+
+            {% if length is not None %}
+                <div class="result-box">
+                    <table>
+                        <tr><td>Original Text:</td><td>{{ user_text }}</td></tr>
+                        <tr><td>Length:</td><td>{{ length }}</td></tr>
+                        <tr><td>Uppercase:</td><td>{{ uppercase }}</td></tr>
+                        <tr><td>Lowercase:</td><td>{{ lowercase }}</td></tr>
+                        <tr><td>Reversed:</td><td>{{ reversed_text }}</td></tr>
+                        <tr><td>Vowel Count:</td><td>{{ vowel_count }}</td></tr>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

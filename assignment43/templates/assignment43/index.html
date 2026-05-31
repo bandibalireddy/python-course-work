@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 43: Exception Hierarchy Explorer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .error-box { background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .error-box p { margin: 8px 0; color: #721c24; }
+        .error-box strong { color: #721c24; }
+        .hierarchy-tree { background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 15px; font-family: monospace; }
+        .hierarchy-tree ul { margin-left: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 43: Exception Hierarchy Explorer</h1>
+        
+        <div class="card">
+            <p class="description">Explore custom exceptions and exception hierarchy.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>AppError.__init__(self, message, error_code): store both, call super().__init__(message)</li>
+                    <li>ValidationError: adds field_name attribute</li>
+                    <li>NetworkError: adds timeout_seconds attribute</li>
+                    <li>DatabaseError: adds db_name attribute</li>
+                    <li>trigger_scenario(): use if/elif to raise the correct exception per scenario</li>
+                    <li>Wrap call in try/except catching each type separately, most specific first</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="scenario">
+                    <option value="">Select scenario</option>
+                    <option value="Validate Email" {% if scenario == 'Validate Email' %}selected{% endif %}>Validate Email</option>
+                    <option value="Validate Age" {% if scenario == 'Validate Age' %}selected{% endif %}>Validate Age</option>
+                    <option value="Simulate Network Timeout" {% if scenario == 'Simulate Network Timeout' %}selected{% endif %}>Simulate Network Timeout</option>
+                    <option value="Simulate DB Connection Failed" {% if scenario == 'Simulate DB Connection Failed' %}selected{% endif %}>Simulate DB Connection Failed</option>
+                    <option value="Divide by Zero" {% if scenario == 'Divide by Zero' %}selected{% endif %}>Divide by Zero</option>
+                    <option value="Catch All Errors" {% if scenario == 'Catch All Errors' %}selected{% endif %}>Catch All Errors</option>
+                    <option value="No Error" {% if scenario == 'No Error' %}selected{% endif %}>No Error</option>
+                </select>
+                <input type="text" name="input_value" placeholder="Input value (for validation scenarios)" value="{% if input_value %}{{ input_value }}{% endif %}">
+                <button type="submit">Run Scenario</button>
+            </form>
+
+            {% if result %}
+                <div class="result-box">
+                    <p><strong>Result:</strong> {{ result }}</p>
+                </div>
+            {% endif %}
+
+            {% if caught_exception %}
+                <div class="error-box">
+                    <p><strong>Exception Caught:</strong> {{ caught_exception }}</p>
+                    <p><strong>Type:</strong> {{ exception_type }}</p>
+                    <p><strong>Message:</strong> {{ exception_message }}</p>
+                    {% if error_code %}
+                        <p><strong>Error Code:</strong> {{ error_code }}</p>
+                    {% endif %}
+                    {% if extra_attributes %}
+                        <p><strong>Extra Attributes:</strong></p>
+                        {% for key, value in extra_attributes.items %}
+                            <p>{{ key }}: {{ value }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="hierarchy-tree">
+                <p><strong>Exception Hierarchy:</strong></p>
+                <ul>
+                    <li>Exception
+                        <ul>
+                            <li>AppError
+                                <ul>
+                                    <li>ValidationError</li>
+                                    <li>NetworkError</li>
+                                    <li>DatabaseError</li>
+                                </ul>
+                            </li>
+                            <li>ZeroDivisionError</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

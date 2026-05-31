@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 12: Student Grade Book</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #c3e6cb; }
+        th { background-color: #e9ecef; color: #155724; font-weight: bold; }
+        td { color: #155724; }
+        .grade-a { color: #28a745; font-weight: bold; }
+        .grade-b { color: #007bff; font-weight: bold; }
+        .grade-c { color: #ffc107; font-weight: bold; }
+        .grade-d { color: #fd7e14; font-weight: bold; }
+        .grade-f { color: #dc3545; font-weight: bold; }
+        .stats { margin-top: 20px; padding-top: 20px; border-top: 2px solid #c3e6cb; }
+        .stats p { margin: 8px 0; color: #155724; font-size: 18px; }
+        .stats strong { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 12: Student Grade Book</h1>
+        
+        <div class="card">
+            <p class="description">Track student grades and calculate class statistics.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Parse gradebook_str into list of dicts with name and score</li>
+                    <li>Add or clear students based on action</li>
+                    <li>Calculate class average</li>
+                    <li>Find highest and lowest scoring student</li>
+                    <li>Sort students by score descending (ranked list)</li>
+                    <li>Assign letter grades to each student</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gradebook" value="{{ gradebook }}">
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Add Student" {% if action == 'Add Student' %}selected{% endif %}>Add Student</option>
+                    <option value="Show Results" {% if action == 'Show Results' %}selected{% endif %}>Show Results</option>
+                    <option value="Clear All" {% if action == 'Clear All' %}selected{% endif %}>Clear All</option>
+                </select>
+                <input type="text" name="student_name" placeholder="Student name (for Add)" value="{{ student_name }}">
+                <input type="text" name="student_score" placeholder="Student score (for Add)" value="{{ student_score }}">
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if ranked_students %}
+                <div class="result-box">
+                    <h3>Ranked Student Results:</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Score</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in ranked_students %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ student.name }}</td>
+                                    <td>{{ student.score }}</td>
+                                    <td class="grade-{{ student.grade|lower }}">{{ student.grade }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="4">No students added yet</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="stats">
+                        <p><strong>Class Average:</strong> {{ class_average }}</p>
+                        <p><strong>Highest Scoring Student:</strong> {{ highest }}</p>
+                        <p><strong>Lowest Scoring Student:</strong> {{ lowest }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

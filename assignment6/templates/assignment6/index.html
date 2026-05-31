@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 6: Mini Profile Card</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .profile-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px; padding: 30px; margin-top: 20px; }
+        .profile-card h2 { margin-bottom: 20px; font-size: 28px; }
+        .profile-info { margin: 10px 0; font-size: 18px; }
+        .profile-info strong { font-weight: bold; }
+        .hobbies-list { margin-top: 15px; }
+        .hobbies-list span { display: inline-block; background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; margin: 5px 5px 5px 0; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 6: Mini Profile Card</h1>
+        
+        <div class="card">
+            <p class="description">Enter your information to create a profile card.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Convert hobbies (comma-separated) into a Python list</li>
+                    <li>Convert age to integer and calculate age_next_year</li>
+                    <li>Count the number of hobbies</li>
+                    <li>Capitalize name and city properly</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Your name" value="{% if name %}{{ name }}{% endif %}">
+                <input type="text" name="age" placeholder="Your age" value="{% if age %}{{ age }}{% endif %}">
+                <input type="text" name="hobbies" placeholder="Hobbies (comma-separated)" value="{% if hobbies_raw %}{{ hobbies_raw }}{% endif %}">
+                <input type="text" name="city" placeholder="Your city" value="{% if city %}{{ city }}{% endif %}">
+                <button type="submit">Create Profile</button>
+            </form>
+
+            {% if hobbies_list is not None %}
+                <div class="profile-card">
+                    <h2>{{ name }}</h2>
+                    <p class="profile-info"><strong>Age:</strong> {{ age }} (Next year: {{ age_next_year }})</p>
+                    <p class="profile-info"><strong>City:</strong> {{ city }}</p>
+                    <p class="profile-info"><strong>Number of Hobbies:</strong> {{ hobby_count }}</p>
+                    <div class="hobbies-list">
+                        <strong>Hobbies:</strong>
+                        {% for hobby in hobbies_list %}
+                            <span>{{ hobby }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

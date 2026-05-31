@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 22: Student Report Card</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        .grade-a { color: #28a745; font-weight: bold; }
+        .grade-b { color: #007bff; font-weight: bold; }
+        .grade-c { color: #ffc107; font-weight: bold; }
+        .grade-d { color: #fd7e14; font-weight: bold; }
+        .grade-f { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 22: Student Report Card</h1>
+        
+        <div class="card">
+            <p class="description">Create a report card with subjects, scores, and letter grades.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Build report dict from subjects_raw (skip empty entries)</li>
+                    <li>Calculate GPA (average of all scores)</li>
+                    <li>Find best and worst subject using dict operations</li>
+                    <li>Assign letter grade to each subject (same scale as assignment 7)</li>
+                    <li>Build grade_report dict</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <label>Subject 1:</label>
+                <input type="text" name="subject_1" placeholder="Subject name">
+                <input type="text" name="score_1" placeholder="Score (0-100)">
+                <label>Subject 2:</label>
+                <input type="text" name="subject_2" placeholder="Subject name">
+                <input type="text" name="score_2" placeholder="Score (0-100)">
+                <label>Subject 3:</label>
+                <input type="text" name="subject_3" placeholder="Subject name">
+                <input type="text" name="score_3" placeholder="Score (0-100)">
+                <label>Subject 4:</label>
+                <input type="text" name="subject_4" placeholder="Subject name">
+                <input type="text" name="score_4" placeholder="Score (0-100)">
+                <label>Subject 5:</label>
+                <input type="text" name="subject_5" placeholder="Subject name">
+                <input type="text" name="score_5" placeholder="Score (0-100)">
+                <button type="submit">Generate Report Card</button>
+            </form>
+
+            {% if report %}
+                <div class="result-box">
+                    <p><strong>GPA:</strong> {{ gpa }}</p>
+                    <p><strong>Best Subject:</strong> {{ best_subject }} ({{ report.best_subject }})</p>
+                    <p><strong>Worst Subject:</strong> {{ worst_subject }} ({{ report.worst_subject }})</p>
+                    <table>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Score</th>
+                            <th>Grade</th>
+                        </tr>
+                        {% for subject, grade in grade_report.items %}
+                            <tr>
+                                <td>{{ subject }}</td>
+                                <td>{{ report.subject }}</td>
+                                <td class="grade-{{ grade|lower }}">{{ grade }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 26: ATM Simulator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .balance-display { background-color: #007bff; color: white; padding: 20px; border-radius: 8px; text-align: center; font-size: 32px; font-weight: bold; margin-bottom: 20px; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+        .error-box { background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .error-box p { margin: 8px 0; color: #721c24; }
+        .error-box strong { color: #721c24; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 26: ATM Simulator</h1>
+        
+        <div class="card">
+            <p class="description">Simulate ATM operations with balance tracking.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Parse transaction_log from log_str</li>
+                    <li>If Deposit: add amount to balance, append to log</li>
+                    <li>If Withdraw: check if amount > balance → set message = "Insufficient funds", else subtract and log</li>
+                    <li>If Check Balance: just display</li>
+                    <li>Serialize log back to string</li>
+                </ul>
+            </div>
+            
+            <div class="balance-display">${{ balance }}</div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Deposit" {% if action == 'Deposit' %}selected{% endif %}>Deposit</option>
+                    <option value="Withdraw" {% if action == 'Withdraw' %}selected{% endif %}>Withdraw</option>
+                    <option value="Check Balance" {% if action == 'Check Balance' %}selected{% endif %}>Check Balance</option>
+                </select>
+                <input type="text" name="amount" placeholder="Amount" value="{% if amount %}{{ amount }}{% endif %}">
+                <input type="hidden" name="balance" value="{% if balance %}{{ balance }}{% endif %}">
+                <input type="hidden" name="transaction_log" value="{% if log_output %}{{ log_output }}{% endif %}">
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if message %}
+                <div class="error-box">
+                    <p><strong>Message:</strong> {{ message }}</p>
+                </div>
+            {% endif %}
+
+            {% if transaction_log %}
+                <div class="result-box">
+                    <p><strong>Transaction History:</strong></p>
+                    <table>
+                        <tr>
+                            <th>Action</th>
+                            <th>Amount</th>
+                            <th>Balance After</th>
+                        </tr>
+                        {% for log in transaction_log %}
+                            <tr>
+                                <td>{{ log.action }}</td>
+                                <td>${{ log.amount }}</td>
+                                <td>${{ log.balance }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 11: Shopping Cart</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .cart-items { margin: 15px 0; }
+        .cart-items ul { margin-left: 20px; }
+        .cart-items li { margin: 8px 0; color: #155724; }
+        .summary { margin-top: 15px; padding-top: 15px; border-top: 2px solid #c3e6cb; }
+        .summary p { margin: 8px 0; color: #155724; font-size: 18px; }
+        .summary strong { font-weight: bold; }
+        .discount-applied { color: #28a745; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 11: Shopping Cart</h1>
+        
+        <div class="card">
+            <p class="description">Add items to your shopping cart and calculate the total with discounts.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Parse cart_str into list of dicts with name and price</li>
+                    <li>Handle Add / Remove Last / Clear actions</li>
+                    <li>Calculate total price</li>
+                    <li>Apply 10% discount if total > 50</li>
+                    <li>Calculate final_price after discount</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="cart_items" value="{{ cart_items }}">
+                <select name="action">
+                    <option value="">Select action</option>
+                    <option value="Add Item" {% if action == 'Add Item' %}selected{% endif %}>Add Item</option>
+                    <option value="Remove Last Item" {% if action == 'Remove Last Item' %}selected{% endif %}>Remove Last Item</option>
+                    <option value="Clear Cart" {% if action == 'Clear Cart' %}selected{% endif %}>Clear Cart</option>
+                </select>
+                <input type="text" name="item_name" placeholder="Item name (for Add)" value="{{ item_name }}">
+                <input type="text" name="item_price" placeholder="Item price (for Add)" value="{{ item_price }}">
+                <button type="submit">Submit</button>
+            </form>
+
+            {% if cart %}
+                <div class="result-box">
+                    <h3>Shopping Cart:</h3>
+                    <div class="cart-items">
+                        <ul>
+                            {% for item in cart %}
+                                <li>{{ item.name }} - ${{ item.price }}</li>
+                            {% empty %}
+                                <li>Your cart is empty</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="summary">
+                        <p><strong>Total:</strong> ${{ total }}</p>
+                        {% if discount %}
+                            <p class="discount-applied"><strong>Discount Applied:</strong> 10% (-${{ discount }})</p>
+                        {% endif %}
+                        <p><strong>Final Price:</strong> ${{ final_price }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

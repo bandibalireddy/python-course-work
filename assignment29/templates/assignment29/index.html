@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 29: Unit Converter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .back-link { color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block; }
+        .back-link:hover { text-decoration: underline; }
+        .card { background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .description { color: #666; margin-bottom: 20px; }
+        .instructions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .instructions h3 { color: #856404; margin-bottom: 10px; }
+        .instructions ul { margin-left: 20px; color: #856404; }
+        .instructions li { margin: 5px 0; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #ddd; border-radius: 4px; font-size: 16px; }
+        input:focus, select:focus { outline: none; border-color: #007bff; }
+        button { padding: 12px 24px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result-box { background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .result-box p { margin: 8px 0; color: #155724; }
+        .result-box strong { color: #155724; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        <h1>Assignment 29: Unit Converter</h1>
+        
+        <div class="card">
+            <p class="description">Convert between different units using custom functions.</p>
+            
+            <div class="instructions">
+                <h3>Assignment Instructions</h3>
+                <ul>
+                    <li>Define 6 conversion functions above the index() function</li>
+                    <li>Each function takes one parameter and returns the converted value rounded to 2 decimal places</li>
+                    <li>Inside the view: if/elif to call the correct function based on conversion_type</li>
+                    <li>Set formula_used to a string showing the formula</li>
+                </ul>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="value" placeholder="Enter value" value="{% if value %}{{ value }}{% endif %}">
+                <select name="conversion_type">
+                    <option value="">Select conversion</option>
+                    <option value="km to miles" {% if conversion_type == 'km to miles' %}selected{% endif %}>km to miles</option>
+                    <option value="miles to km" {% if conversion_type == 'miles to km' %}selected{% endif %}>miles to km</option>
+                    <option value="kg to lbs" {% if conversion_type == 'kg to lbs' %}selected{% endif %}>kg to lbs</option>
+                    <option value="lbs to kg" {% if conversion_type == 'lbs to kg' %}selected{% endif %}>lbs to kg</option>
+                    <option value="Celsius to Fahrenheit" {% if conversion_type == 'Celsius to Fahrenheit' %}selected{% endif %}>Celsius to Fahrenheit</option>
+                    <option value="Fahrenheit to Celsius" {% if conversion_type == 'Fahrenheit to Celsius' %}selected{% endif %}>Fahrenheit to Celsius</option>
+                </select>
+                <button type="submit">Convert</button>
+            </form>
+
+            {% if result is not None %}
+                <div class="result-box">
+                    <p><strong>Original:</strong> {{ value }}</p>
+                    <p><strong>Result:</strong> {{ result }}</p>
+                    <p><strong>Formula:</strong> {{ formula_used }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
