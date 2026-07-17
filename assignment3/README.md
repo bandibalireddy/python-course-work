@@ -7,20 +7,6 @@ Learn how to use the modulo operator (%) to check divisibility and use boolean v
 Open `views.py` in this folder and find:
 ```python
 # ── STUDENT CODE START ──────────────────────────
-num = int(num)
-if num % 2 == 0 :
-   print("even")
-else :
-   print("odd") and 
-   if num % 3 == 0 :
-      print("div_by_3")
-   else num % 5 == 0 :
-      print("div_by_5")
-   else num % both 3 & 5 == 0 :
-      print("div_by_both_3_and_5")
-
-
-
 
 # ── STUDENT CODE END ────────────────────────────
 ```

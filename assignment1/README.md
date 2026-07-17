@@ -7,19 +7,6 @@ Learn how to work with variables, convert strings to numbers, and use if/elif/el
 Open `views.py` in this folder and find:
 ```python
 # ── STUDENT CODE START ──────────────────────────
-num_1 = float(num_1)
-num_2 = float(num_2)
-if "addition" :
-   print(num_1 + num_2 )
-elif "subtraction" :
-   print(num_1 - num_2 )
-elif "multiply" :
-   print(num_1 * num_2 )
-elif division :
-   if num_2 == 0
-   print(cannot divide by zero)
-   else :
-   print(num_1 / num_2 )
 
 # ── STUDENT CODE END ────────────────────────────
 ```
