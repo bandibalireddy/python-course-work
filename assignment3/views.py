@@ -9,16 +9,29 @@ def index(request):
 
     if request.method == 'POST':
         number = request.POST.get('number', '')
-
+        print(number)
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Check divisibility properties
-        # - Check if even or odd → store "Even" or "Odd" in is_even
-        # - Check divisibility by 3 → store True/False in div_by_3
-        # - Check divisibility by 5 → store True/False in div_by_5
-        # - Check divisibility by both 3 and 5 → store True/False in div_by_both
-        pass  # ← Remove this line when you write your code
+        number = int(number)
+        if number % 2 == 0 :
+            is_even = 'even'
+        else :
+            is_even = 'odd'
+            
+        if number % 15 == 0 :  
+            div_by_both = 'true'
+        else :
+            div_by_both = 'false'
+        if number % 3 == 0 :  
+            div_by_3 = 'true'
+        else :
+            div_by_3 = 'false'
+        if number % 5 == 0 :  
+            div_by_5 = 'true'
+        else :
+            div_by_5 = 'false'
+        
         # ── STUDENT CODE END ────────────────────────────
-
+        
     context = {
         'number': number,
         'is_even': is_even,

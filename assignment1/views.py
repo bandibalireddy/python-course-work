@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+ 
 def index(request):
     result = None
     number1 = None
@@ -10,17 +10,29 @@ def index(request):
         number1 = request.POST.get('number1', '')
         number2 = request.POST.get('number2', '')
         operation = request.POST.get('operation', '')
+        print(number1 , number2 , operation )
 
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Convert inputs to floats and perform the operation
-        # - If operation is 'Add': number1 + number2
-        # - If operation is 'Subtract': number1 - number2
-        # - If operation is 'Multiply': number1 * number2
-        # - If operation is 'Divide': number1 / number2 (handle division by zero)
-        # Store the final answer in `result`
-        pass  # ← Remove this line when you write your code
-        # ── STUDENT CODE END ────────────────────────────
+        number1 = float(number1)
+        number2 = float(number2)
+        if operation == "Add" :
+           result = number1 + number2
+        elif operation == "Subtract" :
+           result = number1 - number2
+        elif operation ==  "Multiply" :
+           result = number1 * number2  
+        elif operation == "Divide" :
+           if number2 == 0 :
+              result = "not Division by zero"
+           else :
+              result = number1 / number2
+         
+         
 
+
+        # ── STUDENT CODE END ──────
+        # ──────────────────────
+        print(result)
     context = {
         'result': result,
         'number1': number1,

@@ -14,16 +14,17 @@ def index(request):
         raw_input = request.POST.get('numbers', '')
         number_list = [x.strip() for x in raw_input.split(',') if x.strip()]
 
-        # ── STUDENT CODE START ──────────────────────────
-        # TASK: Calculate statistics for the number list
-        # - Convert number_list items to floats/ints
-        # - Find minimum value
-        # - Find maximum value
-        # - Calculate the sum (total)
-        # - Calculate the average
-        # - Sort the list in ascending order
-        # - Handle empty input with a message
-        pass  # ← Remove this line when you write your code
+        # ── STUDENT CODE START ───────────────────────
+        if number_list == []  :
+          result = "please enter a number"
+        else : 
+           number_list = [int(x) for x in number_list]
+           minimum = min(number_list)
+           maximum = max(number_list)
+           total   = sum(number_list)
+           average = total / len(number_list)
+           sorted_list = sorted(number_list)
+ 
         # ── STUDENT CODE END ────────────────────────────
 
     context = {

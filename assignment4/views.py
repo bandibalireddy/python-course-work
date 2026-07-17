@@ -9,13 +9,21 @@ def index(request):
 
     if request.method == 'POST':
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Manage the grocery list
-        # - If action is "Add Item": add item_name to grocery_list (avoid duplicates)
-        # - If action is "Remove Item": remove item_name if it exists, else set message = "Item not found"
-        # - If action is "View List": just display the list
-        # - If action is "Clear List": empty the list
-        # Always set message to summarize what happened
-        pass  # ← Remove this line when you write your code
+        if action == "add item" :
+            if item_name not in grocery_list :
+                grocery_list.append(item_name)
+                message = "your item has been added"
+        elif action == "remove item" :
+            if item_name in grocery_list :
+                grocery_list.remove(item_name)
+                message = "your item has been removed"
+            else :
+                message = "your item is not in the list"
+        elif action == "clear list" :
+            grocery_list.clear()
+            message = "your list has been cleared"
+        elif action == "view list" :
+            pass
         # ── STUDENT CODE END ────────────────────────────
 
     context = {

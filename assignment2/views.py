@@ -12,14 +12,13 @@ def index(request):
         user_text = request.POST.get('user_text', '')
 
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Analyze the string
-        # - Calculate the length of the string
-        # - Convert to uppercase
-        # - Convert to lowercase
-        # - Reverse the string
-        # - Count vowels (a, e, i, o, u — case insensitive)
-        # Store each in the corresponding variable
-        pass  # ← Remove this line when you write your code
+        text = user_text
+        length = len(text)
+        uppercase = text.upper()
+        lowercase = text.lower()
+        reversed_text = text[::-1]
+        vowel_count = text.count('a') + text.count('e') + text.count('i') + text.count('o') + text.count('u')
+
         # ── STUDENT CODE END ────────────────────────────
 
     context = {

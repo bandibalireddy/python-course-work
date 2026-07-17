@@ -7,6 +7,14 @@ Learn how to work with strings, use string methods to change text, and count cha
 Open `views.py` in this folder and find:
 ```python
 # ── STUDENT CODE START ──────────────────────────
+text = "hello world"
+print(len(text))
+print(text.upper())
+print(text.lower())
+print(text.count('o'))
+print(text[::-1])
+
+
 
 # ── STUDENT CODE END ────────────────────────────
 ```
