@@ -12,14 +12,18 @@ def index(request):
         buzz_word = request.POST.get('buzz_word', 'Buzz')
 
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Implement FizzBuzz with custom words
-        # - Loop from 1 to limit (inclusive)
-        # - If divisible by 3 and 5 → append fizz_word + buzz_word
-        # - If divisible by 3 only → append fizz_word
-        # - If divisible by 5 only → append buzz_word
-        # - Otherwise → append the number
-        # - Store all values in results list
-        pass  # ← Remove this line when you write your code
+        limit = int(limit)
+        results = []
+        for number in range(1, limit + 1):
+            if number % 15 == 0:
+                results.append(fizz_word + buzz_word)
+            elif number % 3 == 0:
+                results.append(fizz_word)
+            elif number % 5 == 0:
+                results.append(buzz_word)
+            else:
+                results.append(number)
+            
         # ── STUDENT CODE END ────────────────────────────
 
     context = {

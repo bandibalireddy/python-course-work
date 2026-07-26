@@ -11,23 +11,24 @@ def index(request):
 
         # ── STUDENT CODE START ──────────────────────────
         score = float(score)
-    if  score < 0 or score > 100 :
-        error = " score must be between 0 and 100 "
-    elif score >= 90 :
-        grade = "A"
-        message = "excellent work"
-    elif score >= 80 :
-        grade = "B"
-        message = "good job"
-    elif score >= 70 :
-        grade = "C"
-        message = "can do better"
-    elif score >= 60 :
-        grade = "D"
-        message = "work hard"
-    else :
-        grade = "F"
-        message = "need to do a lot of hardwork"
+        if  score < 0 or score > 100 :
+            error = " score must be between 0 and 100 " 
+
+        elif score >= 90 :
+            grade = "A"
+            message = "excellent work"
+        elif score >= 80 :
+            grade = "B"
+            message = "good job"
+        elif score >= 70 :
+            grade = "C"
+            message = "can do better"
+        elif score >= 60 :
+            grade = "D"
+            message = "work hard"
+        else :
+            grade = "F"
+            message = "need to do a lot of hardwork"
 
         # ── STUDENT CODE END ────────────────────────────
 

@@ -14,11 +14,51 @@ def index(request):
         status = None
 
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Check speed against zone limits and determine status
-        # - Zone limits: School Zone (15 mph), Residential (25 mph), City Center (35 mph), Highway (70 mph)
-        # - Set status to "Safe" (at or below limit), "Warning" (within 10mph over), or "Danger" (more than 10mph over)
-        # - Set advice with a descriptive message based on status and zone
-        pass  # ← Remove this line when you write your code
+        if zone_type == 'School Zone':
+            if speed <= 15:
+                status = 'safe'
+                advice = 'you are driving safely'
+            elif 15 < speed <= 25:
+                status = 'warning'
+                advice = 'you are going fast than the speed limit'
+            else:
+                status = 'danger'
+                advice = 'u immediately need to slow down'
+        elif zone_type == ' Residential':
+                    if speed <= 25:
+                        status = 'safe'
+                        advice = 'you are driving safely'
+                    elif 25 < speed <= 35:
+                        status = 'warning'
+                        advice = 'you are going fast than the speed limit'
+                    else:
+                        status = 'danger'
+                        advice = 'u immediately need to slow down'
+        if zone_type == 'City Center':
+                    if speed <= 35:
+                        status = 'safe'
+                        advice = 'you are driving safely'
+                    elif 35 < speed <= 45:
+                        status = 'warning'
+                        advice = 'you are going fast than the speed limit'
+                    else:
+                        status = 'danger'
+                        advice = 'u immediately need to slow down'  
+        if zone_type == 'Highway':
+                    if speed <= 70:
+                        status = 'safe'
+                        advice = 'you are driving safely'
+                    elif 70 < speed <= 80:
+                        status = 'warning'
+                        advice = 'you are going fast than the speed limit'
+                    else:
+                        status = 'danger'
+                        advice = 'u immediately need to slow down'   
+
+
+
+
+    
         # ── STUDENT CODE END ────────────────────────────
 
     context = {

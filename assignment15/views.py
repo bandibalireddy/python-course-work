@@ -21,7 +21,41 @@ def index(request):
         # - Southern hemisphere: opposite seasons
         # - Set weather_tip based on season (e.g. "Wear warm clothes" for Winter)
         # - Set months_in_season as a list of the 3 months in that season
-        pass  # ← Remove this line when you write your code
+        if hemisphere == 'Northern':
+            if month == 'June' or month == 'July' or month == 'August':
+                season = 'summer'
+                weather_tip = 'wear cotton clothes'
+                months_in_season = ['june', 'july', 'august']
+            elif month == 'December' or month == 'January' or month == 'February':
+                season = 'winter'
+                weather_tip = 'wear woollen clothes'
+                months_in_season = ['december', 'january', 'february']
+            elif month == 'September' or month == 'October' or month == 'November':
+                season = 'autumn'
+                weather_tip = "don't worry about your plant's leaves. They will grow again."
+                months_in_season = ['September', 'October', 'November']
+            elif month == 'March' or month == 'April' or month == 'May':
+                season = 'spring'
+                weather_tip = 'enjoy the beauty of nature while it is with you'
+                months_in_season = ['march', 'april', 'may']
+        elif hemisphere == 'Southern':
+                    if month == 'June' or month == 'July' or month == 'August':
+                        season = 'winter'
+                        weather_tip = 'wear woollen clothes'
+                        months_in_season = ['june', 'july', 'august']
+                    elif month == 'December' or month == 'January' or month == 'February':
+                        season = 'summer'
+                        weather_tip = 'wear cotton clothes'
+                        months_in_season = ['december', 'january', 'february']
+                    elif month == 'September' or month == 'October' or month == 'November':
+                        season = 'spring'
+                        weather_tip = "enjoy the beauty of nature while it is with you"
+                        months_in_season = ['September', 'October', 'November']
+                    elif month == 'March' or month == 'April' or month == 'May':
+                        season = 'autumn'
+                        weather_tip = "don't worry about your plant's leaves. They will grow again."
+                        months_in_season = ['march', 'april', 'may']
+            
         # ── STUDENT CODE END ────────────────────────────
 
     context = {

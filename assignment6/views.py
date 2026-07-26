@@ -16,12 +16,12 @@ def index(request):
         city = request.POST.get('city', '')
 
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Process profile information
-        # - Convert hobbies_raw into a Python list
-        # - Convert age to integer, calculate age_next_year
-        # - Count number of hobbies
-        # - Capitalize the name and city properly
-        pass  # ← Remove this line when you write your code
+        hobbies_list = hobbies_raw.split()
+        age = int(age)
+        age_next_year = age + 1
+        hobby_count = len(hobbies_list)
+        name = name.title()
+        city = city.title()
         # ── STUDENT CODE END ────────────────────────────
 
     context = {

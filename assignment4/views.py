@@ -9,21 +9,23 @@ def index(request):
 
     if request.method == 'POST':
         # ── STUDENT CODE START ──────────────────────────
-        if action == "add item" :
-            if item_name not in grocery_list :
+        if action == "Add Item":
+            if item_name in grocery_list:
+                message = "item_name is already present"
+            else:
                 grocery_list.append(item_name)
-                message = "your item has been added"
-        elif action == "remove item" :
-            if item_name in grocery_list :
+                message = "Added item_name to list"
+        elif action == "Remove Item":
+            if item_name in grocery_list:
                 grocery_list.remove(item_name)
-                message = "your item has been removed"
-            else :
-                message = "your item is not in the list"
-        elif action == "clear list" :
+                message = "item_name removed "
+            else:
+                message = "Item not found"
+        elif action == "View List":
+            print(grocery_list)
+        elif action == "Clear List":
             grocery_list.clear()
-            message = "your list has been cleared"
-        elif action == "view list" :
-            pass
+            message = "List cleared"
         # ── STUDENT CODE END ────────────────────────────
 
     context = {
