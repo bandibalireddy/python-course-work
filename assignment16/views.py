@@ -12,11 +12,10 @@ def index(request):
         table = []
 
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Generate a multiplication table using a for loop
-        # - Use a for loop from 1 to limit (inclusive)
-        # - Each iteration: calculate number x multiplier
-        # - Append dict {'multiplier': i, 'result': product} to table list
-        pass  # ← Remove this line when you write your code
+        for i in range(1, limit + 1):
+            product = number * i
+            table.append({'multiplier': i, 'result': product})
+         
         # ── STUDENT CODE END ────────────────────────────
 
     context = {

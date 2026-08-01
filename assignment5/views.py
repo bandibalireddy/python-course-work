@@ -18,7 +18,7 @@ def index(request):
         if number_list == []  :
           result = "please enter a number"
         else : 
-           number_list = [int(x) for x in number_list]
+           number_list = int(input("enter the numbers:"))
            minimum = min(number_list)
            maximum = max(number_list)
            total   = sum(number_list)

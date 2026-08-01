@@ -20,13 +20,10 @@ def index(request):
         count = 0
 
         # ── STUDENT CODE START ──────────────────────────
-        # TASK: Sum numbers in a range with filtering
-        # - Use a for loop from start to end using step
-        # - Apply filter based on filter_type using if/elif
-        # - Filter types: All Numbers, Even Only, Odd Only, Multiples of 3
-        # - Append qualifying numbers to included_numbers
-        # - Accumulate total and count
-        pass  # ← Remove this line when you write your code
+        for i in range(start, end + 1, step):
+            if filter_type == 'Even only':
+                included_numbers = 'i % 2 == 0'
+
         # ── STUDENT CODE END ────────────────────────────
 
     context = {
